@@ -95,20 +95,28 @@ fun TodosList(
         }
         if (errorMessage.isNotEmpty()) {
             RetryView(error = errorMessage) {
-                viewModel.loadTodos()
+                viewModel.loadTodos(10, 0)
             }
         }
     }
-
 }
 
 
 @ExperimentalMaterialApi
 @Composable
-fun TodoListView(todos: List<TodosItem>) {
+fun TodoListView(todos: List<TodosItem>, viewModel: TodosListViewModel = hiltViewModel()) {
     LazyColumn(contentPadding = PaddingValues(5.dp)) {
         items(todos) { todo ->
             TodoRow(todo = todo)
+        }
+        item {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (todos.size < 11)
+                    LoadMore { viewModel.loadTodos(100, 10) }
+            }
         }
     }
 }
@@ -191,6 +199,24 @@ fun RetryView(
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
             Text(text = "Retry")
+        }
+    }
+}
+
+@Composable
+fun LoadMore(
+    onMore: () -> Unit
+) {
+    Column {
+        Spacer(modifier = Modifier.height(10.dp))
+        Button(
+            onClick = { onMore() },
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MariGold)
+        ) {
+            Text(text = "Load More...")
         }
     }
 }

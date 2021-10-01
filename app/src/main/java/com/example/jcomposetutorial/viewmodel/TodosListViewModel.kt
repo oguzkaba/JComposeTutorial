@@ -20,14 +20,14 @@ class TodosListViewModel @Inject constructor(
 
 
     init {
-        loadTodos()
+        loadTodos(10,0)
     }
 
 
-fun loadTodos(){
+fun loadTodos(limit: Int?, offset: Int?){
     viewModelScope.launch {
         isLoading.value=true
-        when(val result=repository.getTodosList()){
+        when(val result=repository.getTodosList(limit,offset)){
             is Resource.Success->{
                 val todoItems= result.data!!.mapIndexed{ _, item ->
                     TodosItem(item.Completed,item.Content,item.Id,item.RecordingDate,item.Title)

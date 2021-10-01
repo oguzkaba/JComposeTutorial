@@ -1,8 +1,10 @@
 package com.example.jcomposetutorial
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     @ExperimentalMaterialApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +23,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             JComposeTutorialTheme(darkTheme = true) {
                 // A surface container using the 'background' color from the theme
-                NavHost(navController = navController, startDestination = "todolist") {
+                NavHost(navController = navController, startDestination = "login") {
                     composable("login") {
                         LoginScreen(navController=navController)
                     }

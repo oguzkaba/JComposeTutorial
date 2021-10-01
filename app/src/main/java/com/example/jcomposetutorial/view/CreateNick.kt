@@ -75,7 +75,7 @@ fun CreateNick(
                 ) {
                     if (nick.length > 3) {
                         IconButton(
-                            onClick = { navController.navigate("login") }) {
+                            onClick = { navController.navigate("todolist") }) {
                             Icon(
                                 Icons.Default.NavigateNext, contentDescription = "",
                                 tint = MiddleBlue, modifier = Modifier.size(150.dp)
@@ -87,7 +87,7 @@ fun CreateNick(
                             style = MaterialTheme.typography.h3,
                             modifier = Modifier
                                 .padding(vertical = 25.dp, horizontal = 50.dp)
-                                .clickable { navController.navigate("login") },
+                                .clickable { navController.navigate("todolist") },
                         )
                     }
                 }

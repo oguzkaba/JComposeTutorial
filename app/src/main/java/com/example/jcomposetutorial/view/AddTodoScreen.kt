@@ -1,22 +1,32 @@
 package com.example.jcomposetutorial.view
 
 
+import android.content.Context
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.jcomposetutorial.model.TodosItem
 import com.example.jcomposetutorial.ui.theme.BabyPowder
 import com.example.jcomposetutorial.ui.theme.MiddleBlue
 import com.example.jcomposetutorial.view.component.OutTextFieldCompanent
+import com.example.jcomposetutorial.viewmodel.AddTodoViewModel
+import java.time.LocalDateTime
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddTaskScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: AddTodoViewModel = hiltViewModel()
 ) {
     Scaffold(backgroundColor = BabyPowder) {
         Box(
@@ -33,7 +43,7 @@ fun AddTaskScreen(
             ) {
                 var title by remember { mutableStateOf("") }
                 var content by remember { mutableStateOf("") }
-                val focusManager = LocalFocusManager.current
+                val context = LocalContext.current
                 Text(text = "Todo.", style = MaterialTheme.typography.h2)
                 TabRowDefaults.Divider(
                     color = MiddleBlue,
@@ -58,9 +68,30 @@ fun AddTaskScreen(
                     hint = "Content...",
                     maxLines = 5
                 )
-                Box(contentAlignment = Alignment.BottomCenter,modifier = Modifier.fillMaxHeight()) {
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier.fillMaxHeight()
+                ) {
                     Button(
-                        onClick = { },
+                        onClick = {
+                            if (title.isEmpty() || content.isEmpty())
+                                showMessage(context,"Boş Alan Bırakmayınız...")
+                            else{
+                                val date = LocalDateTime.now()
+                                viewModel.addTodo(
+                                    TodosItem(
+                                        0,
+                                        content,
+                                        null,
+                                        date.toString(),
+                                        title
+                                    )
+                                )
+                                //viewModel.loadTodos()
+                                showMessage(context,"Added Todo...")
+                                navController.navigate("todolist")}
+
+                        },
                         modifier = Modifier
                             .height(50.dp)
                             .fillMaxWidth(),
@@ -80,4 +111,8 @@ fun AddTaskScreen(
         }
 
     }
+}
+
+fun showMessage(context: Context, message:String){
+    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
